@@ -2,7 +2,7 @@ const express = require('express'),
     router = express.Router(),
     Category = require('../models/category')
 
-//GET Caregoires Index
+//GET Categories Index
 router.get('/', function (req, res) {
    Category.find({}, function(err, categories){
        if(err) return console.log(err)
@@ -106,5 +106,8 @@ router.get('/delete-category/:id', function(req, res){
         res.redirect('/admin/categories')
     })
 })
+
+//Prodcuts model setup
+const Product = require('../models/product')
 
 module.exports = router

@@ -1,0 +1,41 @@
+<%- include('../_layouts/admin_header') %>
+
+<h2 class="page-title">Products</h2>
+<a class="btn btn-primary" href="/admin/products/add-product">add new product</a>
+
+<% if(count > 0){ %>
+<table class="table table-striped">
+    <thead>
+        <tr class="home">
+            <th>Product</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Product Image</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+         <% products.forEach(function(product){ %>
+        <tr>
+            <td><%= product.title %></td>
+            <td>$<%= parseFloat(product.price).toFixed(2) %></td>
+            <td><%= product.category %></td>
+            <td>
+                if(product.image == ''){
+                    <img src="images/noimage.png">
+                }else{
+                    <img src="product_images/<%= product._id %>/<%= product.image %>">
+                }
+            </td>
+            <td><a href="/admin/products/edit-product/<%= product._id %>">Edit</a></td>
+                <td><a id="play" href="/admin/products/delete-product/<%= page._id %>">Delete</a></td>
+        </tr>
+        <% }) %>
+    <% }else { %>
+        <h3 class="text-center">No products registered.</h3>
+    <% } %>
+    </tbody>
+</table>
+
+<%- include('../_layouts/admin_footer') %>
