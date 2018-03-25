@@ -3,7 +3,7 @@
     <h2 class="page-title">Edit page</h2>
     <a href="/admin/pages" class="btn btn-primary">Back to all pages</a>
 
-    <form method="post" action="/admin/pages/edit-page/<%= slug %>">
+    <form method="post" action="/admin/pages/edit-page/<%= id %>">
         <div class="form-group">
             <label for="">Title</label>
             <input type="text" class="form-control" name="title" value="<%= title %>" placeholder="Title">
@@ -19,7 +19,6 @@
             <textarea name="content" id="ta" cols="30" rows="10" class="form-control" placeholder="Content"><%= content %></textarea>
         </div>
 
-        <input type="hidden" name="id" value="<%= id %>">
         <button>Submit</button>
     </form>
 

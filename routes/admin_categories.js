@@ -62,7 +62,49 @@ router.get('/edit-category/:id', function(req, res){
 
 //POST edit category
 router.post('/edit-categories/:id', function(req, res){
-    console.log(req.body)
+    req.checkBody('title', 'Title must have a value').notEmpty()
+
+    var title = req.body.title
+    var slug = title.replace(/\s+/g, '-')
+    var id = req.params.id
+
+    var errors = req.validationErrors()
+
+    if(errors){
+        res.render('admin/edit_category', {title: title, errors: errors, id: id})
+    }else{
+        Category.findOne({slug: slug, _id: {'$ne': id}}, function(err, category){
+            if(category){
+                req.flash('danger', 'Category exist, choose another')
+
+                res.render('admin/edit_category', {title: title, id: id})
+            }else{
+                Category.findById(id, function(err, category){
+                    if(err) return console.log(err)
+
+                    category.title = title
+                    category.slug = slug
+
+                    category.save(function(err){
+                        if(err) return console.log(err)
+
+                        req.flash('success', 'category edited')
+                        res.redirect('/admin/categories/edit-category/' + id)
+                    })
+                })
+            }
+        })
+    }
+})
+
+//GET delete category
+router.get('/delete-category/:id', function(req, res){
+    Category.findByIdAndRemove(req.params.id, function(err){
+        if(err) return console.log(err)
+
+        req.flash('success', 'Category deleted')
+        res.redirect('/admin/categories')
+    })
 })
 
 module.exports = router
