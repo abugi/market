@@ -111,4 +111,49 @@ router.post('/add-product', function(req, res){
     }
 
 })
+
+//GET edit product
+router.get('/edit-product/:id', function(req, res){
+    var errors;
+
+    if(req.session.errors)
+        errors = req.session.errors
+        req.session.errors = null
+
+    Category.find(function (err, categories) {
+
+        Product.findById(req.params.id, function(err, p){
+            if(err){
+                console.log(err)
+                res.redirect('/admin/products')
+            }else{
+                //get all gallery images for the product
+                var galleryDir = 'public/product_images/' + p._id + '/gallery';
+                var galleryImages = null;
+
+                //Now read the directory and check for saved files
+                fs.readdir(galleryDir, function(err, files){
+                    if(err){
+                        console.log(`There is ${err} here`)
+                    }else{
+                        galleryImages = files
+
+                        res.render('admin/edit_product', 
+                        {   title: p.title, 
+                            desc: p.desc, 
+                            categories: categories, 
+                            category: p.category.replace(/\s+/g, '-').toLowerCase(),
+                            price: parseFloat(p.price).toFixed(2),
+                            image: p.image,
+                            gallery: galleryImages,
+                            id: p._id 
+                        })
+                    }
+                }) 
+            }
+        })
+    })
+})
+
+
 module.exports = router
