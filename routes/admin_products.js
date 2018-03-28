@@ -250,4 +250,42 @@ router.post('/product-gallery/:id', function(req, res){
     res.sendStatus(200)
 })
 
+//GET delete gallery image
+router.get('/delete-image/:image', function(req, res){
+    var originalImage = 'public/product_images/'+ req.query.id + '/gallery/' + req.params.image
+    var thumbImage = 'public/product_images/' + req.query.id + '/gallery/thumbs/' + req.params.image
+
+    fs.remove(originalImage, function(err){
+        if(err){
+            console.log(err)
+        }else{
+            fs.remove(thumbImage, function(err){
+                if(err){
+                    console.log(err)
+                }else{
+                    req.flash('success', 'Image deleted')
+                    res.redirect('/admin/products/edit-product/'+ req.query.id)
+                }
+            })
+        }
+    })
+})
+
+//GET delete product
+router.get('/delete-product/:id', function(req, res){
+    var id = req.params.id
+    var path = 'public/product_images/' + id
+
+    fs.remove(path, function(err){
+        if(err){
+            console.log(err)
+        }else{
+            Product.findByIdAndRemove(id, function(err){
+                req.flash('success', 'Product deleted')
+                res.redirect('/admin/products')
+            })
+        }
+    })
+})
+
 module.exports = router
