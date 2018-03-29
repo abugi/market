@@ -92,6 +92,18 @@ app.use('/', pages)
 //Set global errors variable
 app.locals.errors = null;
 
+//Page model
+const Page = require('./models/pages')
+
+//Get all pages and make available to all views
+Page.find({}).sort({sorting: 1}).exec(function(err, pages){
+    if(err){
+        console.log(err)
+    }else{
+        app.locals.pages = pages
+    }
+})
+
 //Start the server
 const port = 3000
 app.listen(port, () => console.log('Server running on port ' + port))
